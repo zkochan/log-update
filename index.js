@@ -1,6 +1,7 @@
 'use strict';
 const ansiEscapes = require('ansi-escapes');
 const cliCursor = require('cli-cursor');
+const splitLines = require('split-lines');
 const wrapAnsi = require('wrap-ansi');
 
 const getWidth = stream => {
@@ -37,9 +38,9 @@ const main = (stream, options) => {
 			hard: true,
 			wordWrap: false
 		});
-		const lines = out.split('\n');
+		const lines = splitLines(out, {preserveNewlines: true});
 		const unchangedLinesCount = getUnchangedLinesCount(prevLines, lines);
-		const diffOut = lines.slice(unchangedLinesCount).join('\n');
+		const diffOut = lines.slice(unchangedLinesCount).join('');
 		stream.write(ansiEscapes.eraseLines(prevLines.length - unchangedLinesCount) + diffOut);
 		prevLines = lines;
 	};
